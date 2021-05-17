@@ -1,19 +1,11 @@
 version: 2.1
 jobs:
-  print_hello:
+  print_repo_owner_name:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - run: echo "hello"
-  print_world:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - run: echo "world"
+      - run : echo "Hello my name is $OWNER_NAME"
 workflows:
   welcome:
     jobs:
-      - print_hello
-      - print_world:
-          requires:
-            - print_hello
+      - print_repo_owner_name
