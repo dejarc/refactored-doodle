@@ -1,17 +1,15 @@
 version: 2.1
-commands:
-  print_pipeline_id:
-    description: "print the circleci workflow id"
-    steps:
-      - run: echo "the circle ci workflow id is $CIRCLE_WORKFLOW_ID"
 jobs:
-  print_pipeline:
+  print_hello_and_fail:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - run : echo "hello world"
-      - print_pipeline_id
+      - run : echo "hello world" && return 1
+      - when:
+          condition: on_fail
+          steps:
+            - run: echo "failure caught"
 workflows:
   workflow:
     jobs:
-      - print_pipeline
+      - print_hello_and_fail
