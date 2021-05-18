@@ -4,11 +4,11 @@ jobs:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - run : echo "hello world" && return 1
-      - when:
-          condition: on_fail
-          steps:
-            - run: echo "failure caught"
+      - run : |
+          echo "hello world" && return 1
+      - run:
+          when: on_fail
+          command: echo "Hello Error!"
 workflows:
   workflow:
     jobs:
