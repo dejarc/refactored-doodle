@@ -1,6 +1,36 @@
 version: 2.1
+commands:
+  destroy_environment:
+    description: "A simple command to destroy infrastructure"
+    parameters:
+      stack_name:
+        type: string
+        default: "circleci-stack"
+    steps:
+      - run: |
+          aws cloudformation delete-stack --stack-name << parameters.stack_name >>
 jobs:
   create_infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run : |
+          aws cloudformation deploy --stack-name circleci-stack --template-file template.yml
+  smoke_test_infrastructure_fail:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run : |
+          aws cloudformation deploy --stack-name circleci-stack --template-file template.yml
+      - run:
+          name: simulate error
+          command: |
+            return 1
+      - destroy_environment
+        when: on_fail
+  configure_server_infrastructure:
     docker:
       - image: python:3.7-alpine3.11
     steps:
@@ -14,8 +44,9 @@ jobs:
       - run:
           name: Configure server
           command: |
-            ansible-playbook main-remote.yml -i inventory --ssh-common-args StrictHostKeyChecking=no
-  smoke_test:
+            ansible-playbook main-remote.yml -i inventory
+
+  smoke_test_curl:
     docker:
       - image: circleci/node:13.8.0
     steps:
@@ -28,7 +59,8 @@ jobs:
             else
               echo "It failed"
             fi
+
 workflows:
   workflow:
     jobs:
-      - smoke_test
+      - smoke_test_infrastructure_fail
