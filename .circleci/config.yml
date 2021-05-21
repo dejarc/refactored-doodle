@@ -6,9 +6,15 @@ commands:
       stack_name:
         type: string
         default: "circleci-stack"
+      when_to_run:
+        type: string
+        default: "on_fail"
     steps:
-      - run: |
-          aws cloudformation delete-stack --stack-name << parameters.stack_name >>
+      - run:
+          name: Destroy Environments
+          command: |
+            aws delete-stack --stack-name << parameters.stack_name >>
+          when: << parameters.when_to_run >>
 jobs:
   create_infrastructure:
     docker:
@@ -27,7 +33,7 @@ jobs:
       - run: return 1
       - destroy_environment:
           stack_name: circleci-stack
-
+          when_to_run: on_fail
 
   configure_server_infrastructure:
     docker:
