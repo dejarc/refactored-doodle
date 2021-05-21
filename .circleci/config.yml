@@ -7,7 +7,7 @@ jobs:
       - checkout
 #      - run: ls -la && cd .. && ls -la
       - run : |
-          aws cloudformation deploy --stack-name circleci-stack --template-file file://template.yml
+          aws cloudformation deploy --stack-name circleci-stack --template-file template.yml
 workflows:
   workflow:
     jobs:
