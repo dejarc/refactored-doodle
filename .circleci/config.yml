@@ -15,7 +15,20 @@ jobs:
           name: Configure server
           command: |
             ansible-playbook main-remote.yml -i inventory --ssh-common-args StrictHostKeyChecking=no
+  smoke_test:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run:
+          name: Check if website exists
+          command: |
+            if curl -s --head "https://google4.com"
+            then
+              echo "It worked!"
+            else
+              echo "It failed"
+            fi
 workflows:
   workflow:
     jobs:
-      - create_infrastructure
+      - smoke_test
