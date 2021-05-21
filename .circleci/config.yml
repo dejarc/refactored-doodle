@@ -1,15 +1,12 @@
 version: 2.1
 jobs:
-  print_hello_and_fail:
+  create_infrastructure:
     docker:
-      - image: circleci/node:13.8.0
+      - image: amazon/aws-cli
     steps:
       - run : |
-          echo "hello world" && return 1
-      - run:
-          when: on_fail
-          command: echo "Hello Error!"
+          aws cloudformation create-stack --stack-name circleci-stack --template-body file://../template.yml
 workflows:
   workflow:
     jobs:
-      - print_hello_and_fail
+      - create_infrastructure
