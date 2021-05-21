@@ -5,9 +5,9 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run: ls -la && cd .. && ls -la
+#      - run: ls -la && cd .. && ls -la
       - run : |
-          aws cloudformation create-stack --stack-name circleci-stack --template-body file://template.yml
+          aws cloudformation deploy --stack-name circleci-stack --template-file file://template.yml
 workflows:
   workflow:
     jobs:
