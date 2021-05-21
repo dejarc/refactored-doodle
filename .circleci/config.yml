@@ -2,11 +2,18 @@ version: 2.1
 jobs:
   create_infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
-      - run : |
-          aws cloudformation deploy --stack-name circleci-stack --template-file template.yml
+      - add_ssh_keys:
+          fingerprints: ["89:9d:db:4b:36:ff:29:00:5d:87:7c:2a:bd:33:93:0c"]
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible
+      - run:
+          name: |
+            ansible-playbook main-remote.yml -i inventory
 workflows:
   workflow:
     jobs:
