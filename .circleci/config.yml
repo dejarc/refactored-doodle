@@ -30,7 +30,7 @@ jobs:
       - checkout
       - run : |
           aws cloudformation deploy --stack-name circleci-stack --template-file template.yml
-      - run: return 1
+#      - run: return 1
       - destroy_environment:
           stack_name: circleci-stack
           when_to_run: on_fail
