@@ -24,14 +24,10 @@ jobs:
       - checkout
       - run : |
           aws cloudformation deploy --stack-name circleci-stack --template-file template.yml
-      - run:
-          name: simulate error
-          command: |
-            return 1
-      - run:
-          name: destroy infra
-          command: destroy_environment
-          when: on_fail
+      - run: return 1
+      - destroy_environment
+        when: on_fail
+
   configure_server_infrastructure:
     docker:
       - image: python:3.7-alpine3.11
