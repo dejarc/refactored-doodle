@@ -25,8 +25,9 @@ jobs:
       - run : |
           aws cloudformation deploy --stack-name circleci-stack --template-file template.yml
       - run: return 1
-      - destroy_environment
-        when: on_fail
+      - destroy_environment:
+          stack_name: circleci-stack
+
 
   configure_server_infrastructure:
     docker:
