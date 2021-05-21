@@ -4,10 +4,10 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
-      - checkout
+#      - checkout
       - run: ls -la && cd .. && ls -la
       - run : |
-          aws cloudformation create-stack --stack-name circleci-stack --template-body file://../template.yml
+          aws cloudformation create-stack --stack-name circleci-stack --template-body file://template.yml
 workflows:
   workflow:
     jobs:
