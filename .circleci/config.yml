@@ -28,6 +28,8 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run: |
+          yum install -y tar
       - run : |
           aws cloudformation deploy \
           --template-file bucket.yml \
@@ -38,6 +40,8 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run: |
+          yum install -y tar
       - run : |
           aws cloudformation \
           list-exports --query "Exports[?Name==\`PipelineID\`].Value" \
@@ -51,6 +55,8 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run: |
+          yum install -y tar
       - run : |
           aws cloudformation deploy \
           --template-file cloudfront.yml \
@@ -61,6 +67,8 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run: |
+          yum install -y tar
       - attach_workspace:
           at: ~/
       - run: |
