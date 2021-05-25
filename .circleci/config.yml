@@ -34,8 +34,9 @@ jobs:
       - run : |
           aws cloudformation deploy \
           --template-file bucket.yml \
-          --stack-name "a${CIRCLE_WORKFLOW_ID:0:7}" \
-          --parameter-overrides NAME="a${CIRCLE_WORKFLOW_ID:0:7}"
+          --stack-name "a${CIRCLE_WORKFLOW_ID}" \
+          --parameter-overrides NAME="a${CIRCLE_WORKFLOW_ID}"
+      - run: aws s3 sync . s3://"a${CIRCLE_WORKFLOW_ID}" --delete
   get_last_deployment_id:
     docker:
       - image: amazon/aws-cli
@@ -48,8 +49,6 @@ jobs:
           aws cloudformation \
           list-exports --query "Exports[?Name==\`PipelineID\`].Value" \
           --no-paginate --output text >> ~/pipeline-id.txt
-      - run: |
-          cat ~/pipeline-id.txt
       - persist_to_workspace:
           root: ~/
           paths:
@@ -66,7 +65,7 @@ jobs:
           aws cloudformation deploy \
           --template-file cloudfront.yml \
           --stack-name production-distro \
-          --parameter-overrides PipelineID="${CIRCLE_WORKFLOW_ID}"
+          --parameter-overrides PipelineID="a${CIRCLE_WORKFLOW_ID}"
   clean_up_old_front_end:
     docker:
       - image: amazon/aws-cli
