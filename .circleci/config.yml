@@ -48,6 +48,8 @@ jobs:
           aws cloudformation \
           list-exports --query "Exports[?Name==\`PipelineID\`].Value" \
           --no-paginate --output text >> ~/pipeline-id.txt
+      - run: |
+          cat ~/pipeline-id.txt
       - persist_to_workspace:
           root: ~/
           paths:
@@ -76,7 +78,8 @@ jobs:
       - attach_workspace:
           at: ~/
       - run: |
-          - OLD_PIPELINE_ID=$(<~/pipeline-id.txt)
+          OLD_PIPELINE_ID=$(<~/pipeline-id.txt)
+          echo $OLD_PIPELINE_ID
       - run : |
           aws s3 rm "s3://${OLD_PIPELINE_ID}" --recursive
           aws cloudformation delete-stack --stack-name "${OLD_PIPELINE_ID}"
