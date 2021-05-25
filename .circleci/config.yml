@@ -77,10 +77,9 @@ jobs:
           yum install -y gzip
       - attach_workspace:
           at: ~/
-      - run: |
+      - run : |
           OLD_PIPELINE_ID=$(<~/pipeline-id.txt)
           echo $OLD_PIPELINE_ID
-      - run : |
           aws s3 rm "s3://${OLD_PIPELINE_ID}" --recursive
           aws cloudformation delete-stack --stack-name "${OLD_PIPELINE_ID}"
   smoke_test_infrastructure_fail:
